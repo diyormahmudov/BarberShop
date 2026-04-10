@@ -28,7 +28,7 @@ const BookingForm: React.FC = () => {
     const fetchBusySlots = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/bot-form/busy?barber=${barberName}&date=${date}`
+          `https://barbershoparavan.ru/bot-form/busy?barber=${barberName}&date=${date}`
         );
 
         const busyTimes = res.data.map((item: any) => {
@@ -63,7 +63,7 @@ const BookingForm: React.FC = () => {
     };
 
     try {
-      await axios.post("http://localhost:3000/bot-form", payload);
+      await axios.post("https://barbershoparavan.ru/bot-form", payload);
       alert("Booking created successfully ✅");
       setSelectedTime("");
       setUserName("");
