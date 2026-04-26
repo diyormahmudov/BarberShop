@@ -4,7 +4,7 @@ import { BotFormService } from './bot-form.service';
 
 @Update()
 export class TelegramUpdate {
-    constructor(private readonly botService : BotFormService) {}
+  constructor(private readonly botService: BotFormService) {}
 
   @Start()
   async start(@Ctx() ctx: Context) {
@@ -13,6 +13,6 @@ export class TelegramUpdate {
 
   @Command('users')
   async getUsers(@Ctx() ctx: Context) {
-    await ctx.reply('Foydalanuvchilar ro\'yxati:');
+    await ctx.reply("Foydalanuvchilar ro'yxati:");
   }
 }

@@ -37,11 +37,12 @@ export class BotFormService {
     });
 
     await this.telegram.sendMessage(
-`📝 New booking
+      `📝 New booking
 💈 Barber: ${dto.barberName}
 👤 Client: ${dto.clientName}
+📞 Phone: ${dto.phoneNumber}
 ✂️ Service: ${dto.service}
-⏱️ Time: ${this.formatTime(parsedDate)}`
+⏱️ Time: ${this.formatTime(parsedDate)}`,
     );
 
     return booking;

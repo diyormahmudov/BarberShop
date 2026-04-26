@@ -9,9 +9,9 @@ export class TelegramService {
 
     const url = `https://api.telegram.org/bot${token}/sendMessage`;
 
-    await axios.post(url,{
-      chat_id : chatId,
-      text : message
-    })
+    await axios.post(url, {
+      chat_id: chatId,
+      text: message,
+    });
   }
 }

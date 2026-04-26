@@ -10,10 +10,12 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 html{
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 /* index.css */
@@ -54,16 +56,18 @@ html{
 /* Mobile (default) */
 h1.animate-typing {
   font-size: 3rem; /* ~text-5xl */
-  left: 1rem;      /* kichik ekranlarda chapga biroz joy */
+  left: 50%;
+  transform: translateX(-50%);
   top: 25%;
+  max-width: calc(100vw - 2rem);
 }
 
 /* Tablet */
 @media (min-width: 640px) { /* sm */
   h1.animate-typing {
     font-size: 5rem; /* ~text-6xl */
-    left: 3rem;
     top: 30%;
+    max-width: calc(100vw - 3rem);
   }
 }
 
@@ -71,7 +75,7 @@ h1.animate-typing {
 @media (min-width: 1024px) { /* lg */
   h1.animate-typing {
     font-size: 9rem; /* ~text-9xl */
-    left: 120px;
     top: 33%;
+    max-width: calc(100vw - 4rem);
   }
 }

@@ -8,6 +8,9 @@ export class CreateBotFormDto {
   clientName: string;
 
   @IsString()
+  phoneNumber: string;
+
+  @IsString()
   service: string;
 
   @IsDateString()
