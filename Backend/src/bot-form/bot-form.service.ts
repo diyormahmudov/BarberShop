@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { TelegramService } from './telegram.service';
 import { CreateBotFormDto } from './dto/create-bot-form.dto';
@@ -11,20 +15,39 @@ export class BotFormService {
   ) {}
 
   private formatTime(date: Date): string {
-    // UTC saatini olish - DB da UTC saqlanadi
-    const day = date.getUTCDate().toString().padStart(2, '0');
-    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
-    const year = date.getUTCFullYear();
-    const hours = date.getUTCHours().toString().padStart(2, '0');
-    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
-    return `${day}.${month}.${year} ${hours}:${minutes}`;
+    const formatter = new Intl.DateTimeFormat('ru-RU', {
+      timeZone: process.env.BOOKING_TIMEZONE || 'Europe/Moscow',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+
+    return formatter.format(date).replace(',', '');
   }
 
   async createForm(dto: CreateBotFormDto) {
     const parsedDate = new Date(dto.time);
+    const normalizedPhone = dto.phoneNumber?.trim() || null;
 
     if (isNaN(parsedDate.getTime())) {
       throw new BadRequestException('Invalid date format');
+    }
+
+    const existingBooking = await this.prisma.form.findFirst({
+      where: {
+        barberName: dto.barberName,
+        time: parsedDate,
+      },
+      select: { id: true },
+    });
+
+    if (existingBooking) {
+      throw new ConflictException(
+        'This time slot is already booked. Please choose another time.',
+      );
     }
 
     const booking = await this.prisma.form.create({
@@ -32,6 +55,8 @@ export class BotFormService {
         barberName: dto.barberName,
         clientName: dto.clientName,
         service: dto.service,
+        phoneNumber: normalizedPhone,
+
         time: parsedDate,
       },
     });
@@ -40,7 +65,7 @@ export class BotFormService {
       `📝 New booking
 💈 Barber: ${dto.barberName}
 👤 Client: ${dto.clientName}
-📞 Phone: ${dto.phoneNumber}
+📞 Phone: ${normalizedPhone ?? 'Not provided'}
 ✂️ Service: ${dto.service}
 ⏱️ Time: ${this.formatTime(parsedDate)}`,
     );

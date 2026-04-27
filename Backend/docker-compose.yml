@@ -1,20 +1,22 @@
-version: '3.8'
-
 services:
   backend:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      - DATABASE_URL=postgresql://barber_user:barber_pass@postgres:5432/barber_db?schema=public
+      - PORT=3000
+    env_file:
+      - .env
     networks:
       - app-network
 
   frontend:
     build:
-      context: ./frontend
+      context: ../Frontend/front_barber
       dockerfile: Dockerfile
     ports:
       - "80:80"
@@ -25,4 +27,4 @@ services:
 
 networks:
   app-network:
-    driver: bridgell
+    driver: bridge

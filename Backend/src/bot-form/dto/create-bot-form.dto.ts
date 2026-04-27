@@ -1,14 +1,19 @@
-import { IsString, IsDateString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsDateString, IsOptional, IsString } from 'class-validator';
 
 export class CreateBotFormDto {
   @IsString()
   barberName: string;
 
+  @IsOptional()
+  @Transform(({ value }) =>
+    value === null || value === undefined ? undefined : String(value),
+  )
   @IsString()
-  clientName: string;
+  phoneNumber?: string;
 
   @IsString()
-  phoneNumber: string;
+  clientName: string;
 
   @IsString()
   service: string;

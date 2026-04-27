@@ -14,6 +14,7 @@ model Form {
   id         String   @id @default(uuid()) @db.Uuid
   barberName String
   clientName String
+  phoneNumber String?
   time       DateTime
   service    String
   createdAt  DateTime @default(now())

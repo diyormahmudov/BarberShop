@@ -14,6 +14,9 @@ const generateTimeSlots = () => {
   return slots;
 };
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
+
 const BookingForm: React.FC = () => {
   const [barberName, setBarberName] = useState("");
   const [userName, setUserName] = useState("");
@@ -33,14 +36,13 @@ const BookingForm: React.FC = () => {
     const fetchBusySlots = async () => {
       try {
         const res = await axios.get(
-          `https://barbershoparavan.ru/bot-form/busy?barber=${barberName}&date=${date}`
+          `${API_BASE_URL}/bot-form/busy?barber=${encodeURIComponent(barberName)}&date=${encodeURIComponent(date)}`
         );
 
         const busyTimes = res.data.map((item: BusySlotResponse) => {
           const d = new Date(item.time);
-          // UTC saatini olish - timezone muammosini hal qiladi
-          const hours = d.getUTCHours().toString().padStart(2, "0");
-          const minutes = d.getUTCMinutes().toString().padStart(2, "0");
+          const hours = d.getHours().toString().padStart(2, "0");
+          const minutes = d.getMinutes().toString().padStart(2, "0");
           return `${hours}:${minutes}`;
         });
 
@@ -65,12 +67,12 @@ const BookingForm: React.FC = () => {
       clientName: userName,
       phoneNumber,
       service,
-      time: `${date}T${selectedTime}:00`, 
+      time: new Date(`${date}T${selectedTime}:00`).toISOString(),
     };
 
     try {
-      await axios.post("https://barbershoparavan.ru/bot-form", payload);
-      alert("Booking created successfully ✅");
+      await axios.post(`${API_BASE_URL}/bot-form`, payload);
+      alert("Запись успешно создана ✅");
       setSelectedTime("");
       setUserName("");
       setPhoneNumber("");

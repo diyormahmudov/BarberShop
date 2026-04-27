@@ -11,6 +11,7 @@ const BookingItem = ({ bookingData }: BookingItemProps) => {
         <div key={booking.id} className="booking-item">
           <p>Barber: {booking.barberName}</p>
           <p>User: {booking.userName}</p>
+          <p>Phone: {booking.phoneNumber}</p>
           <p>Service: {booking.service}</p>
           <p>Date: {booking.date}</p>
           <p>Time: {booking.time}</p>

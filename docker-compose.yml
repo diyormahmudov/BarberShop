@@ -20,6 +20,9 @@ services:
     restart: always
     env_file:
       - ./Backend/.env
+    environment:
+      DATABASE_URL: postgresql://barber_user:barber_pass@postgres:5432/barber_db?schema=public
+      PORT: 3000
     ports:
       - "3000:3000"
     depends_on:
