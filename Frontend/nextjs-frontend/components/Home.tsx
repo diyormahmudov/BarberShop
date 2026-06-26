@@ -127,7 +127,7 @@ export default function Home() {
               {/* Logo */}
               <motion.div
                 variants={itemVariants}
-                className="mb-6"
+                className="mb-6  rounded-3xl"
               >
                 <motion.img
                   src={LOGO_SRC}
