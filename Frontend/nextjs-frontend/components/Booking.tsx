@@ -213,7 +213,7 @@ const BookingForm: React.FC = () => {
                   required
                 >
                   <option value="">Выберите барбера</option>
-                  <option value="Ikbol">Ikbol</option>
+                  <option value="Мустафа">Мустафа</option>
                 </select>
               </motion.div>
 

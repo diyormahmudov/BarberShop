@@ -78,12 +78,12 @@ function Contact() {
     {
       icon: Phone,
       label: "Телефон",
-      value: "+7 911 604 38 67",
+      value: "+996 554801024",
     },
     {
       icon: Mail,
       label: "Email",
-      value: "info@barberbooking.com",
+      value: "sergeyvicha08@gmail.com",
     },
   ];
 
