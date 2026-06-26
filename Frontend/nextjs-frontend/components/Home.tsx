@@ -234,7 +234,7 @@ export default function Home() {
                 className="mt-16 grid grid-cols-3 gap-8 md:gap-16"
               >
                 {[
-                  { value: "3+", label: "Лет опыта", icon: Award, color: "from-yellow-400 to-yellow-500" },
+                  { value: "7+", label: "Лет опыта", icon: Award, color: "from-yellow-400 to-yellow-500" },
                   { value: "5.0★", label: "Рейтинг", icon: Star, color: "from-yellow-400 to-yellow-500" },
                 ].map((stat, i) => (
                   <motion.div
