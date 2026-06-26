@@ -127,12 +127,12 @@ export default function Home() {
               {/* Logo */}
               <motion.div
                 variants={itemVariants}
-                className="mb-6  rounded-3xl"
+                className="mb-6"
               >
                 <motion.img
                   src={LOGO_SRC}
                   alt="BURAN Barbershop Logo"
-                  className="w-28 h-28 md:w-36 md:h-36 object-contain drop-shadow-2xl"
+                  className="w-28 h-28 md:w-36 md:h-36 object-cover rounded-full drop-shadow-2xl"
                   whileHover={{ scale: 1.05, rotate: 3 }}
                   transition={{ damping: 20, stiffness: 300 }}
                 />
