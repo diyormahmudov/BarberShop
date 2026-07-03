@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  telegram-relay:
+    build: .
+    container_name: telegram-relay
+    restart: unless-stopped
+    environment:
+      - NTFY_TOPIC=barber-booking
+      - BOT_TOKEN=8743766733:AAEsIS6wOq9PrcH9r99geLko8gN_OZ_hoXM
+      - CHAT_ID=-1003888643277
+    networks:
+      - relay-network
+
+networks:
+  relay-network:
+    driver: bridge

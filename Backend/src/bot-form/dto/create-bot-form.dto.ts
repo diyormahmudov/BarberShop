@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsDateString, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateBotFormDto {
   @IsString()
@@ -18,6 +18,6 @@ export class CreateBotFormDto {
   @IsString()
   service: string;
 
-  @IsDateString()
+  @IsString()
   time: string;
 }

@@ -1,0 +1,15 @@
+{
+  "apps": [{
+    "name": "telegram-relay",
+    "script": "./telegram-relay.js",
+    "interpreter": "/Users/a111/.nvm/versions/node/v24.14.1/bin/node",
+    "cwd": "/Users/a111/Desktop/BarberFull",
+    "watch": false,
+    "autorestart": true,
+    "max_restarts": 10,
+    "min_uptime": "10s",
+    "env": {
+      "NODE_ENV": "production"
+    }
+  }]
+}

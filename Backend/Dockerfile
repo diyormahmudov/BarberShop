@@ -13,4 +13,4 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/prisma ./prisma
 EXPOSE 3000
-CMD ["sh", "-c", "until npx prisma migrate deploy; do echo 'Waiting for DB...'; sleep 3; done && node dist/src/main"]
+CMD ["node", "dist/src/main"]

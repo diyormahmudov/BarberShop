@@ -16,7 +16,7 @@ export class BotFormService {
 
   private formatTime(date: Date): string {
     const formatter = new Intl.DateTimeFormat('ru-RU', {
-      timeZone: process.env.BOOKING_TIMEZONE || 'Europe/Moscow',
+      timeZone: process.env.BOOKING_TIMEZONE || 'Asia/Bishkek',
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
@@ -61,14 +61,44 @@ export class BotFormService {
       },
     });
 
-    await this.telegram.sendMessage(
-      `📝 New booking
-💈 Barber: ${dto.barberName}
-👤 Client: ${dto.clientName}
-📞 Phone: ${normalizedPhone ?? 'Not provided'}
-✂️ Service: ${dto.service}
-⏱️ Time: ${this.formatTime(parsedDate)}`,
-    );
+    // Save notification to database since external APIs are blocked
+    await this.prisma.notification.create({
+      data: {
+        type: 'booking',
+        message: `🎉 НОВАЯ ЗАПИСЬ
+
+👤 Клиент: ${dto.clientName}
+📞 Телефон: ${normalizedPhone ?? 'Не указан'}
+💈 Мастер: ${dto.barberName}
+
+✂️ Услуги:
+${dto.service}
+
+🕐 Время: ${this.formatTime(parsedDate)}
+
+━━━━━━━━━━━━━━━━━━━━
+BURAN Barbershop`,
+      },
+    });
+
+    // Try to send Telegram notification (will likely fail due to blocking)
+    this.telegram.sendMessage(
+      `🎉 НОВАЯ ЗАПИСЬ
+
+👤 Клиент: ${dto.clientName}
+📞 Телефон: ${normalizedPhone ?? 'Не указан'}
+💈 Мастер: ${dto.barberName}
+
+✂️ Услуги:
+${dto.service}
+
+🕐 Время: ${this.formatTime(parsedDate)}
+
+━━━━━━━━━━━━━━━━━━━━
+BURAN Barbershop`,
+    ).catch(error => {
+      console.error('Failed to send Telegram notification:', error);
+    });
 
     return booking;
   }

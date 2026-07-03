@@ -18,7 +18,7 @@ const generateTimeSlots = () => {
   return slots;
 };
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001/api";
+const API_BASE_URL = "https://buranbarber.shop/api";
 
 const BookingForm: React.FC = () => {
   const [barberName, setBarberName] = useState("");
@@ -58,7 +58,10 @@ const BookingForm: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!barberName || !date) return;
+    if (!barberName || !date) {
+      setBusySlots([]);
+      return;
+    }
 
     const fetchBusySlots = async () => {
       try {
@@ -80,6 +83,7 @@ const BookingForm: React.FC = () => {
         }
       } catch (error) {
         console.error(error);
+        setBusySlots([]);
       }
     };
 
@@ -98,7 +102,8 @@ const BookingForm: React.FC = () => {
     };
 
     try {
-      await axios.post(`${API_BASE_URL}/bot-form`, payload);
+      const response = await axios.post(`${API_BASE_URL}/bot-form`, payload);
+      console.log("Booking response:", response);
       setShowSuccessModal(true);
       setSelectedTime("");
       setUserName("");
@@ -108,9 +113,10 @@ const BookingForm: React.FC = () => {
       setDate("");
       setBusySlots([]);
     } catch (error: unknown) {
+      console.error("Booking error:", error);
       const message = axios.isAxiosError(error)
-        ? error.response?.data?.message
-        : undefined;
+        ? error.response?.data?.message || JSON.stringify(error.response?.data)
+        : String(error);
       alert(message || "Error ❌");
     }
   };

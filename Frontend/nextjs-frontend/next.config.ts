@@ -8,6 +8,13 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  output: 'export',
+  images: {
+    unoptimized: true,
+  },
+  compress: true,
+  generateEtags: true,
+  poweredByHeader: false,
 };
 
 export default nextConfig;

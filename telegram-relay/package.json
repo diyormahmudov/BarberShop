@@ -1,0 +1,12 @@
+{
+  "name": "telegram-relay",
+  "version": "1.0.0",
+  "description": "Telegram relay service for BURAN Barbershop",
+  "main": "telegram-relay.js",
+  "scripts": {
+    "start": "node telegram-relay.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}

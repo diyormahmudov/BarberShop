@@ -3,13 +3,17 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, MapPin, Phone, Mail, Star, MessageSquare, Send } from "lucide-react";
+import axios from "axios";
 
 type ReviewType = {
-  id: number;
-  name: string;
-  message: string;
+  id: string;
+  clientName: string;
+  comment: string;
   rating: number;
+  createdAt: string;
 };
+
+const API_BASE_URL = "https://buranbarber.shop/api";
 
 function Contact() {
   const [name, setName] = useState("");
@@ -17,32 +21,43 @@ function Contact() {
   const [rating, setRating] = useState(5);
   const [reviews, setReviews] = useState<ReviewType[]>([]);
   const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const savedReviews = localStorage.getItem("barber_reviews");
-    if (savedReviews) {
-      setReviews(JSON.parse(savedReviews) as ReviewType[]);
-    }
+    fetchReviews();
   }, []);
 
-  const handleSubmitReview = (e: React.FormEvent) => {
+  const fetchReviews = async () => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/reviews`);
+      setReviews(res.data);
+    } catch (error) {
+      console.error("Failed to fetch reviews:", error);
+    }
+  };
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
-    const newReview: ReviewType = {
-      id: Date.now(),
-      name,
-      message,
-      rating,
-    };
+    try {
+      await axios.post(`${API_BASE_URL}/reviews`, {
+        clientName: name,
+        comment: message,
+        rating,
+      });
 
-    const updatedReviews = [newReview, ...reviews].slice(0, 6);
-    setReviews(updatedReviews);
-    localStorage.setItem("barber_reviews", JSON.stringify(updatedReviews));
-
-    setName("");
-    setMessage("");
-    setRating(5);
+      setName("");
+      setMessage("");
+      setRating(5);
+      await fetchReviews();
+    } catch (error) {
+      console.error("Failed to submit review:", error);
+      alert("Ошибка при отправке отзыва");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const containerVariants = {
@@ -209,12 +224,13 @@ function Contact() {
 
               <motion.button
                 type="submit"
+                disabled={loading}
                 whileHover={{ scale: 1.02, boxShadow: "0 10px 40px -10px rgba(250, 204, 21, 0.5)" }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 py-4 text-sm font-bold text-black transition sm:text-base shadow-lg shadow-yellow-400/20 flex items-center justify-center gap-2"
+                className="w-full rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 py-4 text-sm font-bold text-black transition sm:text-base shadow-lg shadow-yellow-400/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="h-5 w-5" />
-                Отправить отзыв
+                {loading ? "Отправка..." : "Отправить отзыв"}
               </motion.button>
             </form>
           </motion.div>
@@ -250,7 +266,7 @@ function Contact() {
                     className="rounded-2xl border border-zinc-700/60 bg-zinc-800/60 p-4 backdrop-blur-sm hover:border-yellow-400/30 transition-all"
                   >
                     <div className="flex items-center justify-between gap-2 mb-2">
-                      <p className="font-semibold text-white">{review.name}</p>
+                      <p className="font-semibold text-white">{review.clientName}</p>
                       <div className="flex gap-0.5">
                         {[...Array(5)].map((_, i) => (
                           <Star
@@ -264,7 +280,7 @@ function Contact() {
                         ))}
                       </div>
                     </div>
-                    <p className="text-zinc-300 text-sm sm:text-base">{review.message}</p>
+                    <p className="text-zinc-300 text-sm sm:text-base">{review.comment}</p>
                   </motion.div>
                 ))
               )}
